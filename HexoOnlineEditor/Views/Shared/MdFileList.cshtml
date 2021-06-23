@@ -1,0 +1,22 @@
+﻿@{
+    Layout = null;
+}
+
+
+<div style="width:100%">
+    <b style="margin:0 0 0 10px;">@ViewBag.Name</b>
+    @if (ViewBag.Name.Contains("博客"))
+    {
+        <a href="javascript:void(0)" class="btn-floating waves-effect waves-light green" style="float:right;margin:0 20px 0 0;" onclick="blogAdd()"><i class="material-icons">&#xe145;</i></a>
+    }
+    else
+    {
+        <a href="javascript:void(0)" class="btn-floating waves-effect waves-light blue lighten-1" style="float:right;margin:0 20px 0 0;" onclick="userAdd()"><i class="material-icons">&#xe145;</i></a>
+    }
+</div>
+<div class="collection">
+    @foreach (MdFileData item in (List<MdFileData>)ViewBag.Md)
+    {
+        <a href="javascript:void(0)" class="collection-item" onclick="GetMdByEdit('@item.MdPath.Replace("\\","\\\\")','@ViewBag.Name')">@item.MdName <span style="font-size:5px;color:dimgray;float:right">@item.UpdateTime.ToString("yy-MM-dd HH:mm")</span></a>
+    }
+</div>

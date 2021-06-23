@@ -1,0 +1,70 @@
+﻿@{
+    ViewData["Title"] = "登录";
+}
+<div class="container">
+    <div class="row">
+        <div class="col s12 m6 offset-m3">
+            <br /><br />
+            <div class="card hoverable">
+                <div class="card-image">
+                    <img src="https://gitee.com/Qinin/my-image/raw/master/2021/20210622103218.jpg">
+                    <span class="card-title">请登录</span>
+                </div>
+                <div class="card-content">
+                    <div class="row">
+                        <div class="input-field col s12">
+                            <i class="material-icons prefix">&#xe853;</i>
+                            <input type="text" id="account">
+                        </div>
+                        <div class="input-field col s12">
+                            <i class="material-icons prefix">&#xe0da;</i>
+                            <input type="password" id="pwd">
+                        </div>
+                    </div>
+                </div>
+                <div class="card-action" align="right">
+                    <a href="javascript:void(0)" style="color: #42a5f5" id="sub">登录</a>
+                    <a href="javascript:void(0)" style="color: #ec407a">取消</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        $(function () {
+            $("#sub").click(function () {
+                var acc = $("#account").val();
+                var pwd = $("#pwd").val();
+                if (acc == "" || pwd == "") {
+                    alert("请填写账号密码!");
+                    return;
+                }
+
+                $.post("/Login/LoginUser", { account: acc, password: pwd }, function (data) {
+                    if (data.status) {
+                        window.location = "/Home/Index";
+                    }
+                    else
+                        layer.msg(data.msg, { icon: 2 });
+                }, "json")
+            })
+            $("#pwd").keydown(function (e) {
+                if (e.keyCode == 13) {
+                    var acc = $("#account").val();
+                    var pwd = $("#pwd").val();
+                    if (acc == "" || pwd == "") {
+                        alert("请填写账号密码!");
+                        return;
+                    }
+
+                    $.post("/Login/LoginUser", { account: acc, password: pwd }, function (data) {
+                        if (data.status) {
+                            window.location = "/Home/Index";
+                        }
+                        else
+                            layer.msg(data.msg, { icon: 2 });
+                    }, "json")
+                }
+            })
+        })
+    </script>
+</div>

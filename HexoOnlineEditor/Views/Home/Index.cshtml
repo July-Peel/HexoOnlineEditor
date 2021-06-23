@@ -1,0 +1,178 @@
+﻿@{
+    ViewData["Title"] = "主页";
+}
+<link href="~/lib/main.css" rel="stylesheet" />
+<nav>
+    <div class="nav-wrapper brown lighten-2">
+        <a href="javascript:void(0)" class="brand-logo center">编辑器</a>
+        <a href="javascript:void(0)" data-target="mobile-demo" class="sidenav-trigger"><i class="material-icons">&#xe5d2;</i></a>
+        <a href="javascript:void(0)" class="right" style="margin:0 30px 0 0" id="setting"><i class="material-icons">&#xe8b8;</i></a>
+    </div>
+</nav>
+<ul class="sidenav sidenav-fixed" id="mobile-demo">
+    <li>
+        <div class="user-view">
+            <div class="background">
+                <img src="~/lib/Image/4.jpg" style="width:300px">
+            </div>
+            <a href="javascript:void(0)"><img class="circle" src="https://gitee.com/Qinin/my-image/raw/master/2021/yingtao.jpg"></a>
+            <a href="javascript:void(0)"><span class="white-text name">果皮</span></a>
+            <a href="javascript:void(0)"><span class="white-text email">Q87888@88.com</span></a>
+        </div>
+    </li>
+    <li>
+        <div class="row">
+            <div class="col s9">
+                <input placeholder="搜索" id="first_name" type="text" class="validate">
+            </div>
+            <div class="col s3">
+                <a href="javascript:void(0)" class="btn-floating waves-effect waves-light red" id="search"><i class="material-icons">&#xe8b6;</i></a>
+            </div>
+        </div>
+    </li>
+    <li id="uData"></li>
+    <li id="bData"></li>
+</ul>
+
+
+<main>
+    <iframe src="/Home/EditMarkDown" style="width:100%;height:900px;left:0;top:60px;right:0;bottom:0;" border="0" id="Farm"></iframe>
+</main>
+
+<div class="row" style="position:absolute;top:900px;right:20px;width:450px">
+    <input type="hidden" id="mdFile" />
+    <div class="col s10"><h5 class="truncate" style="margin:10px 0 0 0" id="mdName"></h5></div>
+    <div class="col s2"><button class="btn-floating waves-effect waves-light orange" id="deleteMd"><i class="material-icons">&#xe872;</i></button></div>
+</div>
+
+
+<script src="~/lib/materialize/js/materialize.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $('.sidenav').sidenav();
+
+        $("#setting").click(function () {
+            $.get("/Home/GetSetting", function (data) {
+                layer.open({
+                    type: 1,
+                    content: data,
+                    resize: false,
+                    area: ['600px', '400px'],
+                    shade: 0.5,
+                    title: false
+                });
+            })
+        })
+        $("#deleteMd").click(function () {
+            var mdName = $("#mdName").html();
+            if (mdName == "") return;
+            layer.confirm('确定删除文件【' + mdName + '】?', { icon: 3, title: '提示' }, function (index) {
+                
+                var LoadIndex = layer.load(1, { shade: 0.6 });
+
+                var mdpath = $("#mdFile").val();
+                $.post("/Home/DeleteMarkDown", { MdPath: mdpath }, function (data) {
+                    if (data.status) {
+                        layer.close(LoadIndex);
+                        $("#mdFile").val("");
+                        $("#mdName").html("");
+                        $("#Farm").attr("src", "/Home/EditMarkDown");
+                        GetBlogData();
+                        GetUserData();
+                        layer.msg(data.msg, { icon: 1 });
+                    } else {
+                        layer.msg(data.msg, { icon: 2 });
+                    }
+
+                },"json")
+
+                layer.close(index);
+            });
+        })
+
+        $("#search").click(function () {
+            var index = layer.load(1, { shade: 0.6 });
+            var STxt = $("#first_name").val();
+            $.get("/Home/GetBlogMd?SearchTxt=" + STxt, function (data) {
+                $("#bData").html(data);
+            })
+            $.get("/Home/GetUserMd?SearchTxt=" + STxt, function (data) {
+                $("#uData").html(data);
+                layer.close(index);
+            })
+        })
+
+        GetBlogData();
+        GetUserData();
+    });
+
+    function GetMdByEdit(mdName,mdType)
+    {
+        var PathList = mdName.split('\\');
+        var md = PathList[PathList.length - 1];
+        $("#mdFile").val(mdName);
+        $("#mdName").html(md);
+        //开始编辑
+
+        mdName = mdName.replace(/\%/g, "%25");
+        mdName = mdName.replace(/\#/g, "%23");
+        mdName = mdName.replace(/\&/g, "%26");
+        mdName = mdName.replace(/\+/g, "%2B");
+        mdName = mdName.replace(/\=/g, "%3D");
+
+        $("#Farm").attr("src", "/Home/EditMarkDown?MdPath=" + mdName + "&MdType=" + mdType);
+
+    }
+
+    function blogAdd() {
+        layer.prompt({
+            formType: 0,
+            title: '新增博客文档，请输入文件名',
+            area: ['300px', '200px'] //自定义文本域宽高
+        }, function (value, index, elem) {
+            $.post("/Home/AddNewMarkDown", { MdName: value, MdType: "BlogMd" }, function (data) {
+                layer.close(index);
+                if (data.status) {
+                    layer.msg(data.msg, { icon: 1 });
+                    GetBlogData();
+                } else {
+                    layer.msg(data.msg, { icon: 2 });
+                }
+            },"json")
+        });
+    }
+    function userAdd() {
+        layer.prompt({
+            formType: 0,
+            title: '新增个人文档，请输入文件名',
+            area: ['300px', '200px'] //自定义文本域宽高
+        }, function (value, index, elem) {
+            $.post("/Home/AddNewMarkDown", { MdName: value, MdType: "UserMd" }, function (data) {
+                layer.close(index);
+                if (data.status) {
+                    layer.msg(data.msg, { icon: 1 });
+                    GetUserData();
+                } else {
+                    layer.msg(data.msg, { icon: 2 });
+                }
+            }, "json")
+        });
+    }
+
+    function GetBlogData() {
+        $.get("/Home/GetBlogMd", function (data) {
+            $("#bData").html(data);
+        })
+    }
+    function GetUserData() {
+        $.get("/Home/GetUserMd", function (data) {
+            $("#uData").html(data);
+        })
+    }
+    function GetUserTxt(mdName) {
+        var PathList = mdName.split('\\');
+        var md = PathList[PathList.length - 1];
+        $("#mdFile").val(mdName);
+        $("#mdName").html(md);
+    }
+</script>

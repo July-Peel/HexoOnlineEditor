@@ -1,0 +1,42 @@
+﻿@{
+    ViewData["Title"] = "设置";
+    Layout = "_Layout.cshtml";
+}
+<h5 style="margin:30px">设置</h5>
+<div class="divider"></div>
+<div class="container">
+    <div class="input-field col s12">
+        <b>博客文档目录</b>
+        <input id="BPath" type="text" class="validate" value="@ViewBag.BPath">
+    </div>
+    <div class="input-field col s12">
+        <b>杂项文档目录</b>
+        <input id="UPath" type="text" class="validate" value="@ViewBag.UPath">
+    </div>
+    <div class="col m12" align="right">
+        <button class="waves-effect waves-light btn" style="margin:30px" id="sub">确定</button>
+    </div>
+</div>
+<script>
+    $(function () {
+        $("#sub").click(function () {
+            var bPath = $("#BPath").val();
+            var uPath = $("#UPath").val();
+            if (bPath == "" && uPath == "") {
+                layer.msg("目录不能为空", { icon: 2 });
+                return;
+            }
+            $.post("/Home/SetSetting", { BPath: bPath, UPath: uPath }, function (data) {
+                if (data.status) {
+
+                    layer.msg(data.msg, { icon: 1, time: 2500 }, function () {
+                        layer.closeAll();
+                    })
+
+                } else {
+                    layer.msg(data.msg, { icon: 2 });
+                }
+            },"json")
+        })
+    })
+</script>
