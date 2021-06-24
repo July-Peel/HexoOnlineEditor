@@ -14,7 +14,9 @@ namespace HexoOnlineEditor.Controllers
         {
             string pwd = Request.Cookies["pwd"]?.ToString() ?? "";
 
-            if (pwd == HelpData.GetMD5("123Cool"))
+            string password = HelpData.GetXmlNote("PassWord");
+
+            if (pwd == HelpData.GetMD5(password))
             {
                 return Redirect("/Home/Index");//已经登录了就跳转
             }
@@ -31,8 +33,10 @@ namespace HexoOnlineEditor.Controllers
                 string acc = Request.Form["account"].ToString() ?? "";
                 string pwd= Request.Form["password"].ToString() ?? "";
 
+                string password = HelpData.GetXmlNote("PassWord");
+
                 if (string.IsNullOrEmpty(acc) || string.IsNullOrEmpty(pwd)) throw new Exception("请填写账号密码");
-                if (acc != "peel" || pwd != "123Cool") throw new Exception("账号密码不正确");
+                if (acc != "peel" || pwd != password) throw new Exception("账号密码不正确");
 
 
                 string Md5Pwd = HelpData.GetMD5(pwd);

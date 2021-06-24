@@ -18,7 +18,19 @@ namespace HexoOnlineEditor.Controllers
         /// <returns></returns>
         public IActionResult Index()
         {
-            return View();
+            string pwd = Request.Cookies["pwd"]?.ToString() ?? "";
+            if (pwd == HelpData.GetMD5("123Cool"))
+            {
+                string Title = HelpData.GetXmlNote("Title");
+                string Split = HelpData.GetXmlNote("Split");
+                ViewBag.Title = Title;
+                ViewBag.Split = Split;
+                return View();
+            }
+            else
+            {
+                return Redirect("/Login/Index");
+            }
         }
         /// <summary>
         /// 设置页面
@@ -26,11 +38,18 @@ namespace HexoOnlineEditor.Controllers
         /// <returns></returns>
         public PartialViewResult GetSetting()
         {
-            string BPath = HelpData.GetXmlNote("BlogPath");
-            string UPath = HelpData.GetXmlNote("UserPath");
+            string BlogPath = HelpData.GetXmlNote("BlogPath");
+            string UserPath = HelpData.GetXmlNote("UserPath");
 
-            ViewBag.BPath = BPath;
-            ViewBag.UPath = UPath;
+            string Title = HelpData.GetXmlNote("Title");
+            string Split = HelpData.GetXmlNote("Split");
+            string PassWord = HelpData.GetXmlNote("PassWord");
+
+            ViewBag.BlogPath = BlogPath;
+            ViewBag.UserPath = UserPath;
+            ViewBag.Title = Title;
+            ViewBag.Split = Split;
+            ViewBag.PassWord = PassWord;
 
             return PartialView("/Views/Shared/SettingPage.cshtml");
         }
@@ -42,6 +61,11 @@ namespace HexoOnlineEditor.Controllers
                 string BPath = Request.Form["BPath"].ToString() ?? "";
                 string UPath = Request.Form["UPath"].ToString() ?? "";
 
+
+                string Title = Request.Form["Title"].ToString() ?? "";
+                string Split = Request.Form["Split"].ToString() ?? "";
+                string PassWord = Request.Form["PassWord"].ToString() ?? "";
+
                 if (!Directory.Exists(BPath) || !Directory.Exists(UPath))
                 {
                     throw new Exception("没有这个目录");
@@ -49,9 +73,11 @@ namespace HexoOnlineEditor.Controllers
 
                 bool success1 = HelpData.SetXmlNote("BlogPath", BPath);
                 bool success2 = HelpData.SetXmlNote("UserPath", UPath);
+                bool success3 = HelpData.SetXmlNote("Title", Title);
+                bool success4 = HelpData.SetXmlNote("Split", Split);
+                bool success5 = HelpData.SetXmlNote("PassWord", PassWord);
 
-
-                if (!success1 && !success1) throw new Exception("编辑失败");
+                if (!success1 || !success2 || !success3 || !success4 || !success5) throw new Exception("编辑失败");
 
                 return Json(new MessAge() { Status = true, Msg = "编辑成功" });
 
@@ -250,6 +276,7 @@ namespace HexoOnlineEditor.Controllers
                 return Json(new MessAge() { Status = false, Msg = ex.Message });
             }
         }
+        [HttpPost]
         public JsonResult DeleteMarkDown()
         {
             try
@@ -261,6 +288,46 @@ namespace HexoOnlineEditor.Controllers
                     System.IO.File.Delete(MdPath);
                 }
                 return Json(new MessAge() { Status = true, Msg = "删除成功" });
+            }
+            catch (Exception ex)
+            {
+                return Json(new MessAge() { Status = false, Msg = ex.Message });
+            }
+        }
+        [HttpPost]
+        public JsonResult EditMarkDownName()
+        {
+            try
+            {
+                string NewName = Request.Form["MdName"].ToString() ?? "";
+                string MdPath = Request.Form["MdPath"].ToString() ?? "";
+                if (string.IsNullOrEmpty(NewName) || string.IsNullOrEmpty(MdPath)) throw new Exception("数据有误");
+
+                if (!System.IO.File.Exists(MdPath)) throw new Exception("文件不存在");
+
+                if (!NewName.Contains(".md")) NewName += ".md";
+
+                string MdTxt = System.IO.File.ReadAllText(MdPath);
+                System.IO.File.Delete(MdPath);
+                string newPath = Path.Combine(Path.GetDirectoryName(MdPath), NewName);
+                System.IO.File.WriteAllText(newPath, MdTxt);
+
+                return Json(new MessAge() { Status = true, Msg = "重命名成功" });
+
+            }
+            catch (Exception ex)
+            {
+                return Json(new MessAge() { Status = false, Msg = ex.Message });
+            }
+        }
+        [HttpPost]
+        public JsonResult GetTianGou()
+        {
+            try
+            {
+                string tiangouTxt = HelpData.Get("https://api.oick.cn/dog/api.php");
+
+                return Json(new MessAge() { Status = true, Msg = tiangouTxt });
             }
             catch (Exception ex)
             {

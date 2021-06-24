@@ -6,12 +6,24 @@
 <div class="divider"></div>
 <div class="container">
     <div class="input-field col s12">
+        <b>标题</b>
+        <input id="Title" type="text" class="validate" value="@ViewBag.Title">
+    </div>
+    <div class="input-field col s12">
         <b>博客文档目录</b>
-        <input id="BPath" type="text" class="validate" value="@ViewBag.BPath">
+        <input id="BPath" type="text" class="validate" value="@ViewBag.BlogPath">
     </div>
     <div class="input-field col s12">
         <b>杂项文档目录</b>
-        <input id="UPath" type="text" class="validate" value="@ViewBag.UPath">
+        <input id="UPath" type="text" class="validate" value="@ViewBag.UserPath">
+    </div>
+    <div class="input-field col s12">
+        <b>文件分隔符</b>
+        <input id="Split" type="text" class="validate" value="@ViewBag.Split">
+    </div>
+    <div class="input-field col s12">
+        <b>密码</b>
+        <input id="PassWord" type="text" class="validate" value="@ViewBag.PassWord">
     </div>
     <div class="col m12" align="right">
         <button class="waves-effect waves-light btn" style="margin:30px" id="sub">确定</button>
@@ -22,11 +34,14 @@
         $("#sub").click(function () {
             var bPath = $("#BPath").val();
             var uPath = $("#UPath").val();
-            if (bPath == "" && uPath == "") {
-                layer.msg("目录不能为空", { icon: 2 });
+            var Title = $("#Title").val();
+            var Split = $("#Split").val();
+            var PassWord = $("#PassWord").val();
+            if (bPath == "" || uPath == "" || Title == "" || Split == "" || PassWord=="") {
+                layer.msg("数据有误", { icon: 2 });
                 return;
             }
-            $.post("/Home/SetSetting", { BPath: bPath, UPath: uPath }, function (data) {
+            $.post("/Home/SetSetting", { BPath: bPath, UPath: uPath, Title: Title, Split: Split, PassWord: PassWord }, function (data) {
                 if (data.status) {
 
                     layer.msg(data.msg, { icon: 1, time: 2500 }, function () {

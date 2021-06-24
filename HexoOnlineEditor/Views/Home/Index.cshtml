@@ -1,10 +1,9 @@
 ﻿@{
-    ViewData["Title"] = "主页";
 }
 <link href="~/lib/main.css" rel="stylesheet" />
 <nav>
     <div class="nav-wrapper brown lighten-2">
-        <a href="javascript:void(0)" class="brand-logo center">编辑器</a>
+        <a href="javascript:void(0)" class="brand-logo center">@ViewBag.Title</a>
         <a href="javascript:void(0)" data-target="mobile-demo" class="sidenav-trigger"><i class="material-icons">&#xe5d2;</i></a>
         <a href="javascript:void(0)" class="right" style="margin:0 30px 0 0" id="setting"><i class="material-icons">&#xe8b8;</i></a>
     </div>
@@ -36,13 +35,15 @@
 
 
 <main>
-    <iframe src="/Home/EditMarkDown" style="width:100%;height:900px;left:0;top:60px;right:0;bottom:0;" border="0" id="Farm"></iframe>
+    <iframe src="/Home/EditMarkDown" style="width:100%;" border="0" id="Farm"></iframe>
 </main>
 
-<div class="row" style="position:absolute;top:900px;right:20px;width:450px">
-    <input type="hidden" id="mdFile" />
-    <div class="col s10"><h5 class="truncate" style="margin:10px 0 0 0" id="mdName"></h5></div>
-    <div class="col s2"><button class="btn-floating waves-effect waves-light orange" id="deleteMd"><i class="material-icons">&#xe872;</i></button></div>
+<div class="row" style="position:absolute;top:900px;right:20px;width:35%">
+    <div class="col s7" align="right"><h5 class="truncate" style="margin:10px 0 0 0" id="mdName"></h5><input type="hidden" id="mdFile" /></div>
+    <div class="col s5" align="right">
+        <button class="btn-floating waves-effect waves-light cyan" id="EditName"><i class="material-icons">&#xe3c9;</i></button>
+        <button class="btn-floating waves-effect waves-light orange" id="deleteMd"><i class="material-icons">&#xe872;</i></button>
+    </div>
 </div>
 
 
@@ -50,6 +51,8 @@
 <script>
     $(document).ready(function () {
         $('.sidenav').sidenav();
+
+        SetIframeHeight();
 
         $("#setting").click(function () {
             $.get("/Home/GetSetting", function (data) {
@@ -67,7 +70,7 @@
             var mdName = $("#mdName").html();
             if (mdName == "") return;
             layer.confirm('确定删除文件【' + mdName + '】?', { icon: 3, title: '提示' }, function (index) {
-                
+
                 var LoadIndex = layer.load(1, { shade: 0.6 });
 
                 var mdpath = $("#mdFile").val();
@@ -102,13 +105,45 @@
             })
         })
 
+
+        $("#EditName").click(function () {
+            var mdName = $("#mdFile").val();
+            var PathList = mdName.split('@ViewBag.Split');
+            var md = PathList[PathList.length - 1].replace('.md', '');
+
+            layer.prompt({
+                formType: 0,
+                title: '重命名',
+                value: md,
+                area: ['400px', '250px'] //自定义文本域宽高
+            }, function (value, index, elem) {
+
+                var LoadIndex = layer.load(1, { shade: 0.6 });
+                $.post("/Home/EditMarkDownName", { MdName: value, MdPath: mdName }, function (data) {
+                    layer.close(index);
+                    if (data.status) {
+                        layer.close(LoadIndex);
+                        $("#mdFile").val("");
+                        $("#mdName").html("");
+                        $("#Farm").attr("src", "/Home/EditMarkDown");
+                        GetBlogData();
+                        GetUserData();
+                        layer.msg(data.msg, { icon: 1 });
+                    } else {
+                        layer.msg(data.msg, { icon: 2 });
+                    }
+                }, "json")
+            });
+        })
+
         GetBlogData();
         GetUserData();
+        
     });
 
     function GetMdByEdit(mdName,mdType)
     {
-        var PathList = mdName.split('\\');
+        var PathList = mdName.split('@ViewBag.Split');
         var md = PathList[PathList.length - 1];
         $("#mdFile").val(mdName);
         $("#mdName").html(md);
@@ -123,7 +158,6 @@
         $("#Farm").attr("src", "/Home/EditMarkDown?MdPath=" + mdName + "&MdType=" + mdType);
 
     }
-
     function blogAdd() {
         layer.prompt({
             formType: 0,
@@ -158,7 +192,6 @@
             }, "json")
         });
     }
-
     function GetBlogData() {
         $.get("/Home/GetBlogMd", function (data) {
             $("#bData").html(data);
@@ -175,4 +208,11 @@
         $("#mdFile").val(mdName);
         $("#mdName").html(md);
     }
+
+    function SetIframeHeight() {
+        var heightNum = ((document.body.scrollWidth / 16) * 9) - 180;
+        if (heightNum < 900) heightNum = 900;
+        $("#Farm").css("height", heightNum + "px")
+    }
+    
 </script>
