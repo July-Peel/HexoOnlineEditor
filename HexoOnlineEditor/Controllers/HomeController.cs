@@ -334,5 +334,25 @@ namespace HexoOnlineEditor.Controllers
                 return Json(new MessAge() { Status = false, Msg = ex.Message });
             }
         }
+        [HttpPost]
+        public JsonResult PublishByBlog()
+        {
+            try
+            {
+                string mdPath = Request.Form["MdPath"].ToString() ?? "";
+                if (string.IsNullOrEmpty(mdPath) || !System.IO.File.Exists(mdPath)) throw new Exception("数据有误");
+
+                string BPath = HelpData.GetXmlNote("BlogPath");
+                string newName = Path.Combine(BPath, Path.GetFileName(mdPath));
+
+                System.IO.File.Copy(mdPath, newName);
+
+                return Json(new MessAge() { Status = true, Msg = "已复制到博客文档" });
+            }
+            catch (Exception ex)
+            {
+                return Json(new MessAge() { Status = false, Msg = ex.Message });
+            }
+        }
     }
 }

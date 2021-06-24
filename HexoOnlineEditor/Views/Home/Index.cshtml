@@ -41,8 +41,9 @@
 <div class="row" style="position:absolute;top:900px;right:20px;width:35%">
     <div class="col s7" align="right"><h5 class="truncate" style="margin:10px 0 0 0" id="mdName"></h5><input type="hidden" id="mdFile" /></div>
     <div class="col s5" align="right">
+        <button class="btn-floating waves-effect waves-light deep-purple" id="fabu"><i class="material-icons">&#xe163;</i></button>
         <button class="btn-floating waves-effect waves-light cyan" id="EditName"><i class="material-icons">&#xe3c9;</i></button>
-        <button class="btn-floating waves-effect waves-light orange" id="deleteMd"><i class="material-icons">&#xe872;</i></button>
+        <button class="btn-floating waves-effect waves-light pink accent-3" id="deleteMd"><i class="material-icons">&#xe872;</i></button>
     </div>
 </div>
 
@@ -51,9 +52,7 @@
 <script>
     $(document).ready(function () {
         $('.sidenav').sidenav();
-
         SetIframeHeight();
-
         $("#setting").click(function () {
             $.get("/Home/GetSetting", function (data) {
                 layer.open({
@@ -92,7 +91,6 @@
                 layer.close(index);
             });
         })
-
         $("#search").click(function () {
             var index = layer.load(1, { shade: 0.6 });
             var STxt = $("#first_name").val();
@@ -104,8 +102,6 @@
                 layer.close(index);
             })
         })
-
-
         $("#EditName").click(function () {
             var mdName = $("#mdFile").val();
             var PathList = mdName.split('@ViewBag.Split');
@@ -133,6 +129,28 @@
                         layer.msg(data.msg, { icon: 2 });
                     }
                 }, "json")
+            });
+        })
+
+        $("#fabu").click(function () {
+            var mdName = $("#mdName").html();
+            if (mdName == "") return;
+            layer.confirm('确定将文件发布到博客文档【' + mdName + '】?', { icon: 3, title: '提示' }, function (index) {
+
+                var LoadIndex = layer.load(1, { shade: 0.6 });
+                var mdpath = $("#mdFile").val();
+                $.post("/Home/PublishByBlog", { MdPath: mdpath }, function (data) {
+                    if (data.status) {
+                        layer.close(LoadIndex);
+                        GetBlogData();
+                        layer.msg(data.msg, { icon: 1 });
+                    } else {
+                        layer.msg(data.msg, { icon: 2 });
+                    }
+
+                }, "json")
+
+                layer.close(index);
             });
         })
 
