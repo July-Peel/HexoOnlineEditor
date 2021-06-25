@@ -19,7 +19,8 @@ namespace HexoOnlineEditor.Controllers
         public IActionResult Index()
         {
             string pwd = Request.Cookies["pwd"]?.ToString() ?? "";
-            if (pwd == HelpData.GetMD5("123Cool"))
+            string password = HelpData.GetXmlNote("PassWord");
+            if (pwd == HelpData.GetMD5(password))
             {
                 string Title = HelpData.GetXmlNote("Title");
                 string Split = HelpData.GetXmlNote("Split");

@@ -38,7 +38,7 @@
     <iframe src="/Home/EditMarkDown" style="width:100%;" border="0" id="Farm"></iframe>
 </main>
 
-<div class="row" style="position:absolute;top:900px;right:20px;width:35%">
+<div class="row" style="position:absolute;right:20px;width:35%" id="caozuo">
     <div class="col s7" align="right"><h5 class="truncate" style="margin:10px 0 0 0" id="mdName"></h5><input type="hidden" id="mdFile" /></div>
     <div class="col s5" align="right">
         <button class="btn-floating waves-effect waves-light deep-purple" id="fabu"><i class="material-icons">&#xe163;</i></button>
@@ -231,6 +231,7 @@
         var heightNum = ((document.body.scrollWidth / 16) * 9) - 180;
         if (heightNum < 900) heightNum = 900;
         $("#Farm").css("height", heightNum + "px")
+        $("#caozuo").css("top", (heightNum + 10) + "px");
     }
     
 </script>
