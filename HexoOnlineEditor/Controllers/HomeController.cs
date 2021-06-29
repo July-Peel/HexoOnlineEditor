@@ -356,5 +356,32 @@ namespace HexoOnlineEditor.Controllers
                 return Json(new MessAge() { Status = false, Msg = ex.Message });
             }
         }
+        public JsonResult SaveMarkDownByApi()
+        {
+            try
+            {
+                string txtReq = Request.Query["value"].ToString() ?? "";
+                if (string.IsNullOrEmpty(txtReq)) throw new Exception("值不能为空");
+
+                //文件名
+                string UPath = Path.Combine(HelpData.GetXmlNote("UserPath"), $"闪念[{DateTime.Now.ToString("yy-MM-dd")}].md");
+
+                if (System.IO.File.Exists(UPath))
+                {
+                    string reqText = txtReq + "\r\n\r\n" + System.IO.File.ReadAllText(UPath);
+                    System.IO.File.WriteAllText(UPath, reqText);
+                }
+                else
+                {
+                    System.IO.File.WriteAllText(UPath, txtReq);
+                }
+                return Json(new MessAge() { Status = true, Msg = "操作成功" });
+            }
+            catch (Exception ex)
+            {
+                return Json(new MessAge() { Status = false, Msg = ex.Message });
+            }
+        }
+
     }
 }

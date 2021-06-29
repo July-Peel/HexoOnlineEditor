@@ -38,9 +38,10 @@
     <iframe src="/Home/EditMarkDown" style="width:100%;" border="0" id="Farm"></iframe>
 </main>
 
-<div class="row" style="position:absolute;right:20px;width:35%" id="caozuo">
+<div class="row" style="position:absolute;right:20px;width:39%" id="caozuo">
     <div class="col s7" align="right"><h5 class="truncate" style="margin:10px 0 0 0" id="mdName"></h5><input type="hidden" id="mdFile" /></div>
     <div class="col s5" align="right">
+        <button class="btn-floating waves-effect waves-light teal lighten-1" id="saveWD"><i class="material-icons">&#xe161;</i></button>
         <button class="btn-floating waves-effect waves-light deep-purple" id="fabu"><i class="material-icons">&#xe163;</i></button>
         <button class="btn-floating waves-effect waves-light cyan" id="EditName"><i class="material-icons">&#xe3c9;</i></button>
         <button class="btn-floating waves-effect waves-light pink accent-3" id="deleteMd"><i class="material-icons">&#xe872;</i></button>
@@ -154,6 +155,10 @@
 
                 layer.close(index);
             });
+        })
+
+        $("#saveWD").click(function () {
+            window.frames[0].document.getElementById('sub').click();
         })
 
         GetBlogData();
