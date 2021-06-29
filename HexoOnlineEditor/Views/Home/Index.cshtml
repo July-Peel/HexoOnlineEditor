@@ -2,7 +2,7 @@
 }
 <link href="~/lib/main.css" rel="stylesheet" />
 <nav>
-    <div class="nav-wrapper brown lighten-2">
+    <div class="nav-wrapper brown blue darken-2">
         <a href="javascript:void(0)" class="brand-logo center">@ViewBag.Title</a>
         <a href="javascript:void(0)" data-target="mobile-demo" class="sidenav-trigger"><i class="material-icons">&#xe5d2;</i></a>
         <a href="javascript:void(0)" class="right" style="margin:0 30px 0 0" id="setting"><i class="material-icons">&#xe8b8;</i></a>
@@ -104,6 +104,8 @@
         })
         $("#EditName").click(function () {
             var mdName = $("#mdFile").val();
+            if (mdName == "") return;
+
             var PathList = mdName.split('@ViewBag.Split');
             var md = PathList[PathList.length - 1].replace('.md', '');
 

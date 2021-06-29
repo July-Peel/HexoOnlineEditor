@@ -260,7 +260,8 @@ namespace HexoOnlineEditor.Controllers
                 if (MdType == "BlogMd")
                 {
                     string BPath = HelpData.GetXmlNote("BlogPath");
-                    
+                    string MdPath = Path.Combine(BPath, MdName + ".md");
+                    System.IO.File.WriteAllText(MdPath, "");
                 }
                 else
                 {
