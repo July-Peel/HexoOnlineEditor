@@ -364,7 +364,9 @@ namespace HexoOnlineEditor.Controllers
                 if (string.IsNullOrEmpty(txtReq)) throw new Exception("值不能为空");
 
                 //文件名
-                string UPath = Path.Combine(HelpData.GetXmlNote("UserPath"), $"闪念[{DateTime.Now.ToString("yy-MM-dd")}].md");
+                string UPath = Path.Combine(HelpData.GetXmlNote("UserPath"), $"闪念[{DateTime.Now.ToString("yy-MM")}].md");
+
+                txtReq = DateTime.Now.ToString("yyyy-MM-dd hh:mm:ss") + "\r\n" + txtReq;
 
                 if (System.IO.File.Exists(UPath))
                 {
