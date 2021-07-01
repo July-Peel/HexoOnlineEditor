@@ -366,7 +366,7 @@ namespace HexoOnlineEditor.Controllers
                 //文件名
                 string UPath = Path.Combine(HelpData.GetXmlNote("UserPath"), $"闪念[{DateTime.Now.ToString("yy-MM")}].md");
 
-                txtReq = DateTime.Now.ToString("yyyy-MM-dd hh:mm:ss") + "\r\n" + txtReq;
+                txtReq = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") + "\r\n" + txtReq;
 
                 if (System.IO.File.Exists(UPath))
                 {
