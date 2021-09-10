@@ -2,7 +2,7 @@
 }
 <link href="~/lib/main.css" rel="stylesheet" />
 <nav>
-    <div class="nav-wrapper brown blue darken-2">
+    <div class="nav-wrapper light-blue lighten-1">
         <a href="javascript:void(0)" class="brand-logo center">@ViewBag.Title</a>
         <a href="javascript:void(0)" data-target="mobile-demo" class="sidenav-trigger"><i class="material-icons">&#xe5d2;</i></a>
         <a href="javascript:void(0)" class="right" style="margin:0 30px 0 0" id="setting"><i class="material-icons">&#xe8b8;</i></a>
@@ -163,8 +163,7 @@
 
         GetBlogData();
         GetUserData();
-        
-    });
+        });
 
     function GetMdByEdit(mdName,mdType)
     {
@@ -235,8 +234,7 @@
     }
 
     function SetIframeHeight() {
-        var heightNum = ((document.body.scrollWidth / 16) * 9) - 180;
-        if (heightNum < 900) heightNum = 900;
+        var heightNum = window.screen.height - 220;
         $("#Farm").css("height", heightNum + "px")
         $("#caozuo").css("top", (heightNum + 10) + "px");
     }

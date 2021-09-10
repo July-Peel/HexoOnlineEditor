@@ -17,7 +17,6 @@ D:\Disarray\乱七八糟\HexoOnlineEditor\HexoOnlineEditor\obj\Debug\net5.0\Hexo
 D:\Disarray\乱七八糟\HexoOnlineEditor\HexoOnlineEditor\obj\Debug\net5.0\HexoOnlineEditor.RazorAssemblyInfo.cache
 D:\Disarray\乱七八糟\HexoOnlineEditor\HexoOnlineEditor\obj\Debug\net5.0\HexoOnlineEditor.RazorAssemblyInfo.cs
 D:\Disarray\乱七八糟\HexoOnlineEditor\HexoOnlineEditor\obj\Debug\net5.0\staticwebassets\HexoOnlineEditor.StaticWebAssets.Manifest.cache
-D:\Disarray\乱七八糟\HexoOnlineEditor\HexoOnlineEditor\obj\Debug\net5.0\staticwebassets\HexoOnlineEditor.StaticWebAssets.xml
 D:\Disarray\乱七八糟\HexoOnlineEditor\HexoOnlineEditor\obj\Debug\net5.0\scopedcss\bundle\HexoOnlineEditor.styles.css
 D:\Disarray\乱七八糟\HexoOnlineEditor\HexoOnlineEditor\obj\Debug\net5.0\HexoOnlineEditor.TagHelpers.input.cache
 D:\Disarray\乱七八糟\HexoOnlineEditor\HexoOnlineEditor\obj\Debug\net5.0\HexoOnlineEditor.TagHelpers.output.cache
